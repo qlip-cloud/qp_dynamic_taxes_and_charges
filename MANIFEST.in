@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include qp_dynamic_taxes_and_charges *.css
+recursive-include qp_dynamic_taxes_and_charges *.csv
+recursive-include qp_dynamic_taxes_and_charges *.html
+recursive-include qp_dynamic_taxes_and_charges *.ico
+recursive-include qp_dynamic_taxes_and_charges *.js
+recursive-include qp_dynamic_taxes_and_charges *.json
+recursive-include qp_dynamic_taxes_and_charges *.md
+recursive-include qp_dynamic_taxes_and_charges *.png
+recursive-include qp_dynamic_taxes_and_charges *.py
+recursive-include qp_dynamic_taxes_and_charges *.svg
+recursive-include qp_dynamic_taxes_and_charges *.txt
+recursive-exclude qp_dynamic_taxes_and_charges *.pyc

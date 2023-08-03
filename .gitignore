@@ -1,0 +1,6 @@
+.DS_Store
+*.pyc
+*.egg-info
+*.swp
+tags
+qp_dynamic_taxes_and_charges/docs/current
