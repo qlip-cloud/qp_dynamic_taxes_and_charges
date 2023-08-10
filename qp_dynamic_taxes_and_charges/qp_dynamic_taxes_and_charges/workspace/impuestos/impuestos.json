@@ -26,7 +26,7 @@
    "doc_view": "",
    "icon": "setting",
    "label": "Confi. de Impuestos",
-   "link_to": "DTYC Config",
+   "link_to": "Dynamic Taxes Config",
    "type": "DocType"
   }
  ],
