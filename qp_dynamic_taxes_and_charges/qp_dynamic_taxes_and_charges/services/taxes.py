@@ -10,15 +10,16 @@ def check_itemtax_exist(parent, tax_type, tax_rate):
 @frappe.whitelist()
 def check_tabletax_exist(doctype, parent, tax_type, tax_rate):
 
-    tax_template_table = None
-
-    for field in frappe.get_meta(doctype).fields:
-        if field.fieldname == 'taxes':
-            tax_template_table = field.options
-
+    exist = False
+    
     if parent:
+
+        tax_template_table = None
+
+        for field in frappe.get_meta(doctype).fields:
+            if field.fieldname == 'taxes':
+                tax_template_table = field.options
+
         exist = frappe.db.exists(tax_template_table, {"parent": parent, "account_head":tax_type, "rate":tax_rate})
-    else:
-        exist = frappe.db.exists(tax_template_table, {"account_head":tax_type, "rate":tax_rate})
 
     return {"exist": True if exist else False}
