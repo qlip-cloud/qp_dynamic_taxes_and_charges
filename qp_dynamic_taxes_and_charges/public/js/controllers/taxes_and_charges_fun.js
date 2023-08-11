@@ -33,13 +33,20 @@ erpnext.TransactionController.prototype.taxes_and_charges = function(){
                             refresh_field("taxes");
                         } else {
                             if(is_check_merge){
+                                
+                                    let tax_list = me.frm.doc.items.filter(i => i.item_tax_template).map(i => i.item_tax_template)
 
-                                me.frm.set_value("taxes", []);
+                                    if(tax_list.length > 0){
+                                        me.frm.set_value("taxes", []);
 
-                                for (let tax of r.message) {
-                                    if(tax_exists(master_name, tax.account_head, tax.rate))
-                                        me.frm.add_child("taxes", tax);
-                                }
+                                        for (let tax of r.message) {
+                                            if(tax_exists(tax_list, tax.account_head, tax.rate))
+                                                me.frm.add_child("taxes", tax);
+                                        }
+                                    }
+                                   
+                                    
+                               
                             }else{
                                 me.frm.set_value("taxes", r.message);
                             }
@@ -54,14 +61,14 @@ erpnext.TransactionController.prototype.taxes_and_charges = function(){
     });
 }
 
-function tax_exists(master_name, account_head, rate){
+function tax_exists(tax_list, account_head, rate){
 
     let exist = false;
 
     frappe.call({
             method: "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.services.taxes.check_itemtax_exist",
             args: {
-                "parent": master_name, 
+                "tax_list": tax_list,
                 "tax_type":account_head, 
                 "tax_rate":rate
             },
