@@ -20,10 +20,11 @@ erpnext.taxes_and_totals.prototype.add_taxes_from_item_tax_template = function(i
                 let found = (me.frm.doc.taxes || []).find(d => {
 
                     if(is_check_merge){
-                        return (d.account_head === tax && d.rate === rate) ? true : false
+                        if(d.account_head === tax && d.rate === rate)
+                            return d
                     }else{
                         if(d.account_head === tax)
-                            return d.account_head === tax ? true : false
+                            return d
                     }
                     
                 });
@@ -50,7 +51,7 @@ erpnext.taxes_and_totals.prototype.add_taxes_from_item_tax_template = function(i
                     let child = frappe.model.add_child(me.frm.doc, "taxes");
                     child.charge_type = "On Net Total";
                     child.account_head = tax;
-                    child.rate = 0;
+                    child.rate = is_check_merge ? rate : 0;
                 }
             });
     
