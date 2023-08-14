@@ -16,8 +16,11 @@ erpnext.taxes_and_totals.prototype._load_item_tax_rate = function(item_tax_rate)
                 if(item_tax_rate){
                     return_item_tax_rate = JSON.parse(item_tax_rate);
                     $.each(return_item_tax_rate, function(tax, rate) {
-                        if(!me.doc.taxes.some(t => t.account_head === tax))
-                            delete return_item_tax_rate[tax];
+                        me.doc.taxes.some(t => {
+                            if(t.account_head === tax)
+                                delete return_item_tax_rate[tax];
+                        });
+                            
                     });   
                 }else{
                     return_item_tax_rate = {}
