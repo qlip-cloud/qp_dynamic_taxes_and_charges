@@ -29,3 +29,8 @@ def check_tabletax_exist(doctype, parent, tax_type, tax_rate):
         exist = frappe.db.exists(tax_template_table, {"parent": parent, "account_head":tax_type, "rate":tax_rate})
 
     return {"exist": True if exist else False}
+
+@frappe.whitelist()
+def get_taxes_config(field):
+
+    return frappe.db.get_single_value('Dynamic Taxes Config', field)

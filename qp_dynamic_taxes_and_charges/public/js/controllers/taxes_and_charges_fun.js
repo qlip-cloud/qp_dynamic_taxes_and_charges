@@ -1,64 +1,77 @@
 erpnext.TransactionController.prototype.taxes_and_charges = function(){
     
     var me = this;
-        
-    frappe.db.get_single_value('Dynamic Taxes Config', 'cruzar_impuestos').then((merge) => {
-
-        if(this.frm.doc.taxes_and_charges) {
-
-            let is_check_merge = merge;
-            let master_doctype = frappe.meta.get_docfield(this.frm.doc.doctype, "taxes_and_charges", this.frm.doc.name).options
-            let master_name = this.frm.doc.taxes_and_charges
-        
-            return this.frm.call({
-                method: "erpnext.controllers.accounts_controller.get_taxes_and_charges",
-                args: {
-                    "master_doctype": master_doctype,
-                    "master_name": master_name
-                },
-                callback: function(r) {
-                    if(!r.exc) {
-
-                        if(me.frm.doc.shipping_rule && me.frm.doc.taxes) {
     
-                                for (let tax of r.message) {
-                                    if(is_check_merge){
-                                        if(tax_exists(master_name, tax.account_head, tax.rate))
-                                            me.frm.add_child("taxes", tax);
-                                    }else{
-                                        me.frm.add_child("taxes", tax);
-                                    }
-                                }
-                                        
-                            refresh_field("taxes");
-                        } else {
-                            if(is_check_merge){
-                                
+    frappe.call({
+        method: "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.services.taxes.get_taxes_config",
+        args: {
+            "field":"cruzar_impuestos"
+        },
+        async: false,
+        callback: function(r) {
+            
+
+            if(me.frm.doc.taxes_and_charges) {
+
+                let is_check_merge = r.message
+                let master_doctype = frappe.meta.get_docfield(me.frm.doc.doctype, "taxes_and_charges", me.frm.doc.name).options
+                let master_name = me.frm.doc.taxes_and_charges
+            
+                return frappe.call({
+                    method: "erpnext.controllers.accounts_controller.get_taxes_and_charges",
+                    args: {
+                        "master_doctype": master_doctype,
+                        "master_name": master_name
+                    },
+                    callback: function(r) {
+                        if(!r.exc) {
+    
+                            if(me.frm.doc.shipping_rule && me.frm.doc.taxes) {
+                                    
                                     let tax_list = me.frm.doc.items.filter(i => i.item_tax_template).map(i => i.item_tax_template)
-
-                                    if(tax_list.length > 0){
-                                        me.frm.set_value("taxes", []);
-
-                                        for (let tax of r.message) {
-                                            if(tax_exists(tax_list, tax.account_head, tax.rate))
-                                                me.frm.add_child("taxes", tax);
+    
+                                    for (let tax of r.message) {
+                                        if(is_check_merge){
+                                            if(tax_list.length > 0){
+                                                if(tax_exists(master_name, tax.account_head, tax.rate))
+                                                    me.frm.add_child("taxes", tax);
+                                            }
+                                            
+                                        }else{
+                                            me.frm.add_child("taxes", tax);
                                         }
                                     }
-                                   
+                                            
+                                refresh_field("taxes");
+                            } else {
+                                if(is_check_merge){
                                     
-                               
-                            }else{
-                                me.frm.set_value("taxes", r.message);
-                            }
+                                        let tax_list = me.frm.doc.items.filter(i => i.item_tax_template).map(i => i.item_tax_template)
     
-                            me.calculate_taxes_and_totals();
+                                        if(tax_list.length > 0){
+                                            me.frm.set_value("taxes", []);
+    
+                                            for (let tax of r.message) {
+                                                if(tax_exists(tax_list, tax.account_head, tax.rate))
+                                                    me.frm.add_child("taxes", tax);
+                                            }
+                                        }
+                                       
+                                        
+                                   
+                                }else{
+                                    me.frm.set_value("taxes", r.message);
+                                }
+        
+                                me.calculate_taxes_and_totals();
+                            }
                         }
                     }
-                }
-            });
+                });
+            }
         }
-
     });
+
 }
 
 function tax_exists(tax_list, account_head, rate){
