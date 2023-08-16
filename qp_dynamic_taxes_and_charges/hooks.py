@@ -84,9 +84,15 @@ app_include_js = ["/assets/qp_dynamic_taxes_and_charges/js/controllers/add_taxes
 # ---------------
 # Override standard doctype classes
 
-# override_doctype_class = {
-# 	"ToDo": "custom_app.overrides.CustomToDo"
-# }
+override_doctype_class = {
+	"Sales Invoice": "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.overrides.overrided_doctypes.CustomSalesInvoice",
+	"Sales Order": "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.overrides.overrided_doctypes.CustomSalesOrder",
+	"Purchase Order": "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.overrides.overrided_doctypes.CustomPurchaseOrder",
+	"Purchase Invoice": "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.overrides.overrided_doctypes.CustomPurchaseInvoice",
+	"Delivery Note": "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.overrides.overrided_doctypes.CustomDeliveryNote",
+	"Quotation": "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.overrides.overrided_doctypes.CustomQuotation",
+	"Payment Entry": "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.overrides.overrided_doctypes.CustomPaymentEntry",
+}
 
 # Document Events
 # ---------------
