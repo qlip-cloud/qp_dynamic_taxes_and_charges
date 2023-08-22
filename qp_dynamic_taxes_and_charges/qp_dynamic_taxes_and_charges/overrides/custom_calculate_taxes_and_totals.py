@@ -1,3 +1,4 @@
+import json
 import frappe
 from frappe.utils import flt
 from erpnext.controllers.taxes_and_totals import calculate_taxes_and_totals
@@ -15,3 +16,24 @@ class custom_calculate_taxes_and_totals(calculate_taxes_and_totals):
                 return 0
             else:
                 return tax.rate
+
+    def _load_item_tax_rate(self, item_tax_rate):
+
+        cruzar_impuestos = frappe.db.get_single_value('Dynamic Taxes Config', "cruzar_impuestos")
+
+        if cruzar_impuestos:
+            if item_tax_rate:
+                return_item_tax_rate = json.loads(item_tax_rate)
+                return_item_tax_rate_copy = return_item_tax_rate.copy()
+
+                for tax, rate in return_item_tax_rate_copy.items():
+                    if not any((t.account_head == tax and t.rate == rate) for t in self.doc.get("taxes")):
+                        del return_item_tax_rate[tax]
+
+            else:
+                return_item_tax_rate = {}
+            
+        else:
+            return_item_tax_rate = json.loads(item_tax_rate) if item_tax_rate else {}
+        
+        return return_item_tax_rate
