@@ -36,5 +36,4 @@ class custom_calculate_taxes_and_totals(calculate_taxes_and_totals):
         else:
             return_item_tax_rate = json.loads(item_tax_rate) if item_tax_rate else {}
         
-        print(return_item_tax_rate)
         return return_item_tax_rate
