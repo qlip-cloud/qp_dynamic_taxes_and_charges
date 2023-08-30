@@ -1,34 +1,42 @@
 {
+ "cards_label": "Impuestos",
  "category": "Modules",
  "charts": [],
- "creation": "2023-08-04 11:56:06.835687",
+ "creation": "2023-08-29 16:24:09.564394",
  "developer_mode_only": 0,
- "disable_user_customization": 1,
+ "disable_user_customization": 0,
  "docstatus": 0,
  "doctype": "Workspace",
- "extends_another_page": 0,
+ "extends": "Settings",
+ "extends_another_page": 1,
  "hide_custom": 0,
  "icon": "setting",
  "idx": 0,
  "is_default": 0,
  "is_standard": 1,
- "label": "Impuestos",
+ "label": "Settings Taxes",
  "links": [],
- "modified": "2023-08-04 11:59:57.528040",
+ "modified": "2023-08-29 20:22:03.356392",
  "modified_by": "Administrator",
  "module": "Qp Dynamic Taxes And Charges",
- "name": "Impuestos",
+ "name": "Settings Taxes",
  "owner": "Administrator",
- "pin_to_bottom": 1,
+ "pin_to_bottom": 0,
  "pin_to_top": 0,
  "shortcuts": [
   {
    "doc_view": "",
    "icon": "setting",
-   "label": "Confi. de Impuestos",
+   "label": "Config. de Impuesto",
    "link_to": "Dynamic Taxes Config",
    "type": "DocType"
+  },
+  {
+   "doc_view": "",
+   "icon": "setting",
+   "label": "Config. Autoname",
+   "link_to": "Autoname File Config",
+   "type": "DocType"
   }
- ],
- "shortcuts_label": "Settings"
+ ]
 }
