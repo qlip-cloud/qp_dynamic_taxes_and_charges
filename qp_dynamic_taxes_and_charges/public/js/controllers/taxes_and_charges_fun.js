@@ -74,8 +74,8 @@ erpnext.TransactionController.prototype.taxes_and_charges = function(){
 
                                                     if(['On Previous Row Amount', 'Previous Row Total'].includes(tax.charge_type)){
                                                         
-                                                        let prev_account_head = r.message.find( x => x.idx == tax.row_id).account_head
-                                                        let prev_rate = r.message.find( x => x.idx == tax.row_id).rate
+                                                        let prev_account_head = r.message[tax.row_id -1].account_head
+                                                        let prev_rate = r.message[tax.row_id -1].rate
 
                                                         if(!tax_exists(tax_list, prev_account_head, prev_rate)){
                                                             add_tax = false;
