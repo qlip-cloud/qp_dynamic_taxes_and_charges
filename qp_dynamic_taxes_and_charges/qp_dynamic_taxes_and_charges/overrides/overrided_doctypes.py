@@ -7,18 +7,24 @@ from erpnext.buying.doctype.purchase_order.purchase_order import PurchaseOrder
 from erpnext.accounts.doctype.payment_entry.payment_entry import PaymentEntry
 from frappe.desk.doctype.workspace.workspace import Workspace
 from frappe.model.naming import parse_naming_series
+from frappe.utils import flt
 import frappe 
+import json
+
+def calculate_taxes_and_totals_function(self):
+
+	from .custom_calculate_taxes_and_totals import custom_calculate_taxes_and_totals
+
+	custom_calculate_taxes_and_totals(self)
+
+	if self.doctype in ["Quotation", "Sales Order", "Delivery Note", "Sales Invoice"]:
+		self.calculate_commission()
+		self.calculate_contribution()
 
 class CustomSalesInvoice(SalesInvoice):
+
 	def calculate_taxes_and_totals(self):
-
-		from .custom_calculate_taxes_and_totals import custom_calculate_taxes_and_totals
-
-		custom_calculate_taxes_and_totals(self)
-
-		if self.doctype in ["Quotation", "Sales Order", "Delivery Note", "Sales Invoice"]:
-			self.calculate_commission()
-			self.calculate_contribution()
+		calculate_taxes_and_totals_function(self)		
 	
 	def autoname(self):
 
@@ -29,70 +35,27 @@ class CustomSalesInvoice(SalesInvoice):
 
 class CustomSalesOrder(SalesOrder):
 	def calculate_taxes_and_totals(self):
-
-		from .custom_calculate_taxes_and_totals import custom_calculate_taxes_and_totals
-
-		custom_calculate_taxes_and_totals(self)
-
-		if self.doctype in ["Quotation", "Sales Order", "Delivery Note", "Sales Invoice"]:
-			self.calculate_commission()
-			self.calculate_contribution() 
+		calculate_taxes_and_totals_function(self)	
 
 class CustomDeliveryNote(DeliveryNote):
 	def calculate_taxes_and_totals(self):
-
-		from .custom_calculate_taxes_and_totals import custom_calculate_taxes_and_totals
-
-		custom_calculate_taxes_and_totals(self)
-
-		if self.doctype in ["Quotation", "Sales Order", "Delivery Note", "Sales Invoice"]:
-			self.calculate_commission()
-			self.calculate_contribution()
+		calculate_taxes_and_totals_function(self)	
 
 class CustomQuotation(Quotation):
 	def calculate_taxes_and_totals(self):
-
-		from .custom_calculate_taxes_and_totals import custom_calculate_taxes_and_totals
-
-		custom_calculate_taxes_and_totals(self)
-
-		if self.doctype in ["Quotation", "Sales Order", "Delivery Note", "Sales Invoice"]:
-			self.calculate_commission()
-			self.calculate_contribution()
+		calculate_taxes_and_totals_function(self)	
 
 class CustomPurchaseInvoice(PurchaseInvoice):
 	def calculate_taxes_and_totals(self):
-
-		from .custom_calculate_taxes_and_totals import custom_calculate_taxes_and_totals
-
-		custom_calculate_taxes_and_totals(self)
-
-		if self.doctype in ["Quotation", "Sales Order", "Delivery Note", "Sales Invoice"]:
-			self.calculate_commission()
-			self.calculate_contribution()
+		calculate_taxes_and_totals_function(self)	
 
 class CustomPurchaseOrder(PurchaseOrder):
 	def calculate_taxes_and_totals(self):
-
-		from .custom_calculate_taxes_and_totals import custom_calculate_taxes_and_totals
-
-		custom_calculate_taxes_and_totals(self)
-
-		if self.doctype in ["Quotation", "Sales Order", "Delivery Note", "Sales Invoice"]:
-			self.calculate_commission()
-			self.calculate_contribution() 
-
+		calculate_taxes_and_totals_function(self)	
 
 class CustomPaymentEntry(PaymentEntry):
 	def calculate_taxes_and_totals(self):
-
-		from .custom_calculate_taxes_and_totals import custom_calculate_taxes_and_totals
-
-		custom_calculate_taxes_and_totals(self)
-
-		if self.doctype in ["Quotation", "Sales Order", "Delivery Note", "Sales Invoice"]:
-			self.calculate_commission()
-			self.calculate_contribution()
+		calculate_taxes_and_totals_function(self)	
 
 class CustomWorkspace(Workspace):
 
