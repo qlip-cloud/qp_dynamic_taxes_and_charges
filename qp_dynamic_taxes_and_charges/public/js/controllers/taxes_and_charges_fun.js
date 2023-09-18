@@ -44,7 +44,9 @@ erpnext.TransactionController.prototype.taxes_and_charges = function(){
 
                                                         if(!tax_exists(tax_list, prev_account_head, prev_rate)){
                                                             add_tax = false;
-                                                        }                   
+                                                        }     
+                                                        
+                                                        tax.row_id = me.frm.doc.taxes.slice(-1).idx; 
                                                     }
 
                                                     if(add_tax){
@@ -79,7 +81,9 @@ erpnext.TransactionController.prototype.taxes_and_charges = function(){
 
                                                         if(!tax_exists(tax_list, prev_account_head, prev_rate)){
                                                             add_tax = false;
-                                                        }                   
+                                                        }
+                                                        
+                                                        tax.row_id = me.frm.doc.taxes.slice(-1).idx;               
                                                     }
 
                                                     if(add_tax){
