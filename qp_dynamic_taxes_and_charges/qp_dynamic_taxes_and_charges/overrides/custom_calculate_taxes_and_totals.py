@@ -8,18 +8,23 @@ class custom_calculate_taxes_and_totals(calculate_taxes_and_totals):
     def _get_tax_rate(self, tax, item_tax_map):
 
         impuesto_individual = frappe.db.get_single_value('Dynamic Taxes Config', "impuesto_individual")
-
-        print(tax.account_head)
         
         if tax.account_head in item_tax_map:
+            if impuesto_individual:
+                if tax.charge_type in ['On Previous Row Amount', 'Previous Row Total'] and not item_tax_map.get(self.doc.get("taxes")[cint(tax.row_id) - 1].account_head):
+                    if tax.charge_type == 'Previous Row Total':
+                        self.doc.get("taxes")[cint(tax.row_id) - 1].grand_total_for_current_item = self.doc.get("taxes")[cint(tax.row_id) - 1].tax_amount
+                    if tax.charge_type == 'On Previous Row Amount':
+                         self.doc.get("taxes")[cint(tax.row_id) - 1].tax_amount_for_current_item = self.doc.get("taxes")[cint(tax.row_id) - 1].tax_amount
+
             return flt(item_tax_map.get(tax.account_head), self.doc.precision("rate", tax))
         else:
             if impuesto_individual:
-                if tax.charge_type in ['On Previous Row Amount', 'Previous Row Total'] and not item_tax_map.get(tax.account_head):
+                if tax.charge_type in ['On Previous Row Amount', 'Previous Row Total'] and not item_tax_map.get(self.doc.get("taxes")[cint(tax.row_id) - 1].account_head):
                     if tax.charge_type == 'Previous Row Total':
                          self.doc.get("taxes")[cint(tax.row_id) - 1].grand_total_for_current_item = self.doc.get("taxes")[cint(tax.row_id) - 1].tax_amount
                     if tax.charge_type == 'On Previous Row Amount':
-                         self.doc.get("taxes")[cint(tax.row_id) - 1].tax_fraction_for_current_item = self.doc.get("taxes")[cint(tax.row_id) - 1].tax_amount
+                         self.doc.get("taxes")[cint(tax.row_id) - 1].tax_amount_for_current_item = self.doc.get("taxes")[cint(tax.row_id) - 1].tax_amount
 
                 return 0
             else:
