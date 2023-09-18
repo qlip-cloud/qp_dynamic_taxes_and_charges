@@ -33,8 +33,24 @@ erpnext.TransactionController.prototype.taxes_and_charges = function(){
                                     for (let tax of r.message) {
                                         if(is_check_merge){
                                             if(tax_list.length > 0){
-                                                if(tax_exists(master_name, tax.account_head, tax.rate))
-                                                    me.frm.add_child("taxes", tax);
+                                                if(tax_exists(master_name, tax.account_head, tax.rate)){
+                                                    
+                                                    let add_tax = true;
+
+                                                    if(['On Previous Row Amount', 'Previous Row Total'].includes(tax.charge_type)){
+                                                        
+                                                        let prev_account_head = r.message[tax.row_id -1].account_head
+                                                        let prev_rate = r.message[tax.row_id -1].rate
+
+                                                        if(!tax_exists(tax_list, prev_account_head, prev_rate)){
+                                                            add_tax = false;
+                                                        }                   
+                                                    }
+
+                                                    if(add_tax){
+                                                        me.frm.add_child("taxes", tax);
+                                                    }
+                                                }
                                             }
                                             
                                         }else{
@@ -52,8 +68,25 @@ erpnext.TransactionController.prototype.taxes_and_charges = function(){
                                             me.frm.set_value("taxes", []);
     
                                             for (let tax of r.message) {
-                                                if(tax_exists(tax_list, tax.account_head, tax.rate))
-                                                    me.frm.add_child("taxes", tax);
+                                                if(tax_exists(tax_list, tax.account_head, tax.rate)){
+
+                                                    let add_tax = true;
+
+                                                    if(['On Previous Row Amount', 'Previous Row Total'].includes(tax.charge_type)){
+                                                        
+                                                        let prev_account_head = r.message.find( x => x.idx == tax.row_id).account_head
+                                                        let prev_rate = r.message.find( x => x.idx == tax.row_id).rate
+
+                                                        if(!tax_exists(tax_list, prev_account_head, prev_rate)){
+                                                            add_tax = false;
+                                                        }                   
+                                                    }
+
+                                                    if(add_tax){
+                                                        me.frm.add_child("taxes", tax);
+                                                    }
+                                                    
+                                                }
                                             }
                                         }
                                        

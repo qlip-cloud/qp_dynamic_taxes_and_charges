@@ -1,3 +1,4 @@
+from operator import itemgetter
 import frappe
 import ast
 
@@ -14,21 +15,28 @@ def check_itemtax_exist(tax_list, tax_type, tax_rate):
     return {"exist": exist}
 
 @frappe.whitelist()
-def check_tabletax_exist(doctype, parent, tax_type, tax_rate):
+def check_tabletax_exist(doctype, tax_type, tax_rate, parent = None):
 
     exist = False
     
+    tax_template_table = None
+
+    for field in frappe.get_meta(doctype).fields:
+        if field.fieldname == 'taxes':
+            tax_template_table = field.options
+
     if parent:
-
-        tax_template_table = None
-
-        for field in frappe.get_meta(doctype).fields:
-            if field.fieldname == 'taxes':
-                tax_template_table = field.options
-
         exist = frappe.db.exists(tax_template_table, {"parent": parent, "account_head":tax_type, "rate":tax_rate})
+        
+    item_tax_list = frappe.db.get_values(tax_template_table, {"parent": parent}, ['account_head', 'charge_type', 'row_id', 'idx'], as_dict=1)
+    
+    if item_tax_list:
+        item_tax_list = sorted(item_tax_list, key= lambda i:i['idx'])
 
-    return {"exist": True if exist else False}
+    return {
+        "exist": True if exist else False,
+        "item_tax_list": item_tax_list
+    }
 
 @frappe.whitelist()
 def get_taxes_config(field):
