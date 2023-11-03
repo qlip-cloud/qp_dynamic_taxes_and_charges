@@ -5,6 +5,7 @@ from erpnext.selling.doctype.quotation.quotation import Quotation
 from erpnext.accounts.doctype.purchase_invoice.purchase_invoice import PurchaseInvoice
 from erpnext.buying.doctype.purchase_order.purchase_order import PurchaseOrder
 from erpnext.accounts.doctype.payment_entry.payment_entry import PaymentEntry
+from erpnext.stock.doctype.purchase_receipt.purchase_receipt import PurchaseReceipt
 from frappe.desk.doctype.workspace.workspace import Workspace
 from frappe.model.naming import parse_naming_series
 from frappe.utils import flt
@@ -56,6 +57,10 @@ class CustomPurchaseOrder(PurchaseOrder):
 class CustomPaymentEntry(PaymentEntry):
 	def calculate_taxes_and_totals(self):
 		calculate_taxes_and_totals_function(self)	
+
+class CustomPurchaseReceipt(PurchaseReceipt):
+	def calculate_taxes_and_totals(self):
+		calculate_taxes_and_totals_function(self)
 
 class CustomWorkspace(Workspace):
 
