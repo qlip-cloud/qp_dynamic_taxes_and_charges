@@ -87,12 +87,12 @@ app_include_js = ["/assets/qp_dynamic_taxes_and_charges/js/controllers/add_taxes
 override_doctype_class = {
 	"Sales Invoice": "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.overrides.overrided_doctypes.CustomSalesInvoice",
 	"Sales Order": "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.overrides.overrided_doctypes.CustomSalesOrder",
-	"Purchase Order": "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.overrides.overrided_doctypes.CustomPurchaseOrder",
-	"Purchase Invoice": "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.overrides.overrided_doctypes.CustomPurchaseInvoice",
+	#"Purchase Order": "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.overrides.overrided_doctypes.CustomPurchaseOrder",
+	#"Purchase Invoice": "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.overrides.overrided_doctypes.CustomPurchaseInvoice",
 	"Delivery Note": "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.overrides.overrided_doctypes.CustomDeliveryNote",
 	"Quotation": "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.overrides.overrided_doctypes.CustomQuotation",
 	"Payment Entry": "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.overrides.overrided_doctypes.CustomPaymentEntry",
-	"Purchase Receipt": "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.overrides.overrided_doctypes.CustomPurchaseReceipt",
+	#"Purchase Receipt": "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.overrides.overrided_doctypes.CustomPurchaseReceipt",
     "Workspace": "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.overrides.overrided_doctypes.CustomWorkspace",
 }
 
