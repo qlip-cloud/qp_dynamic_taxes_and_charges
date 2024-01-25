@@ -31,7 +31,7 @@ erpnext.TransactionController.prototype.taxes_and_charges = function(){
                                     let tax_list = me.frm.doc.items.filter(i => i.item_tax_template).map(i => i.item_tax_template)
     
                                     for (let tax of r.message) {
-                                        if(is_check_merge){
+                                        if(is_check_merge && !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(me.frm.doc.doctype)){
                                             if(tax_list.length > 0){
                                                 if(tax_exists(master_name, tax.account_head, tax.rate)){
                                                     
@@ -62,7 +62,7 @@ erpnext.TransactionController.prototype.taxes_and_charges = function(){
                                             
                                 refresh_field("taxes");
                             } else {
-                                if(is_check_merge){
+                                if(is_check_merge && !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(me.frm.doc.doctype)){
                                     
                                         let tax_list = me.frm.doc.items.filter(i => i.item_tax_template).map(i => i.item_tax_template)
     
