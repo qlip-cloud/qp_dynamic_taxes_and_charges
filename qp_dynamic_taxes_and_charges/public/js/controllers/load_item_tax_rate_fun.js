@@ -12,7 +12,7 @@ erpnext.taxes_and_totals.prototype._load_item_tax_rate = function(item_tax_rate)
         callback: function(r) {
             let cruzar_impuestos = r.message
 
-            if(cruzar_impuestos){
+            if(cruzar_impuestos && !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(me.frm.doc.doctype)){
                 if(item_tax_rate){
                     return_item_tax_rate = JSON.parse(item_tax_rate);
                     $.each(return_item_tax_rate, function(tax, rate) {
