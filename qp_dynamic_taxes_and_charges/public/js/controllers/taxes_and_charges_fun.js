@@ -5,7 +5,7 @@ erpnext.TransactionController.prototype.taxes_and_charges = function(){
     frappe.call({
         method: "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.services.taxes.get_taxes_config",
         args: {
-            "field":"cruzar_impuestos"
+            "fields":["cruzar_impuestos", "todos_los_doctypes"]
         },
         async: false,
         callback: function(r) {
@@ -13,7 +13,12 @@ erpnext.TransactionController.prototype.taxes_and_charges = function(){
 
             if(me.frm.doc.taxes_and_charges) {
 
-                let is_check_merge = r.message
+                let is_check_merge = r.message["cruzar_impuestos"]
+                let all_doctypes = r.message["todos_los_doctypes"]
+                
+                let flag = is_check_merge && (all_doctypes || !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(me.frm.doc.doctype)) ? true : false
+
+
                 let master_doctype = frappe.meta.get_docfield(me.frm.doc.doctype, "taxes_and_charges", me.frm.doc.name).options
                 let master_name = me.frm.doc.taxes_and_charges
             
@@ -29,9 +34,9 @@ erpnext.TransactionController.prototype.taxes_and_charges = function(){
                             if(me.frm.doc.shipping_rule && me.frm.doc.taxes) {
                                     
                                     let tax_list = me.frm.doc.items.filter(i => i.item_tax_template).map(i => i.item_tax_template)
-    
+
                                     for (let tax of r.message) {
-                                        if(is_check_merge && !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(me.frm.doc.doctype)){
+                                        if(flag){
                                             if(tax_list.length > 0){
                                                 if(tax_exists(master_name, tax.account_head, tax.rate)){
                                                     
@@ -62,7 +67,7 @@ erpnext.TransactionController.prototype.taxes_and_charges = function(){
                                             
                                 refresh_field("taxes");
                             } else {
-                                if(is_check_merge && !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(me.frm.doc.doctype)){
+                                if(flag){
                                     
                                         let tax_list = me.frm.doc.items.filter(i => i.item_tax_template).map(i => i.item_tax_template)
     

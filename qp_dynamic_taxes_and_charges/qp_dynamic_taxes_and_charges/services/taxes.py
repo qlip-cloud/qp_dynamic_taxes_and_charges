@@ -39,6 +39,14 @@ def check_tabletax_exist(doctype, tax_type, tax_rate, parent = None):
     }
 
 @frappe.whitelist()
-def get_taxes_config(field):
+def get_taxes_config(field = None, fields = None):
 
-    return frappe.db.get_single_value('Dynamic Taxes Config', field)
+    ret = {}
+
+    if fields:
+        for f in ast.literal_eval(fields):
+            ret[f] = frappe.db.get_single_value('Dynamic Taxes Config', f)
+    else:
+        ret[field] = frappe.db.get_single_value('Dynamic Taxes Config', field)
+
+    return ret

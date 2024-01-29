@@ -6,13 +6,16 @@ erpnext.taxes_and_totals.prototype._load_item_tax_rate = function(item_tax_rate)
     frappe.call({
         method: "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.services.taxes.get_taxes_config",
         args: {
-            "field":"cruzar_impuestos"
+            "fields":["cruzar_impuestos", "todos_los_doctypes"]
         },
         async: false,
         callback: function(r) {
-            let cruzar_impuestos = r.message
+            let is_check_merge = r.message["cruzar_impuestos"]
+            let all_doctypes = r.message["todos_los_doctypes"]
 
-            if(cruzar_impuestos && !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(me.frm.doc.doctype)){
+            let flag = is_check_merge && (all_doctypes || !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(me.frm.doc.doctype)) ? true : false
+
+            if(flag){
                 if(item_tax_rate){
                     return_item_tax_rate = JSON.parse(item_tax_rate);
                     $.each(return_item_tax_rate, function(tax, rate) {
