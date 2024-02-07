@@ -12,7 +12,7 @@ erpnext.taxes_and_totals.prototype._get_tax_rate = function(tax, item_tax_map) {
 
             let impuesto_individual = r.message["impuesto_individual"]
             let all_doctypes = r.message["todos_los_doctypes"]
-            let flag = impuesto_individual && (all_doctypes || !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(me.frm.doc.doctype)) ? true : false
+            let flag = impuesto_individual && (all_doctypes || !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(cur_frm.doc.doctype)) ? true : false
 
             if(flag){
                 tax_rate =  (Object.keys(item_tax_map).indexOf(tax.account_head) != -1) ? flt(item_tax_map[tax.account_head], precision("rate", tax)) : 0;
