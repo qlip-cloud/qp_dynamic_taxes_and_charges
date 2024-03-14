@@ -1,0 +1,56 @@
+{
+ "actions": [],
+ "creation": "2023-08-29 20:13:29.686773",
+ "description": "Settings autoname",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "autoname"
+ ],
+ "fields": [
+  {
+   "default": "0",
+   "fieldname": "autoname",
+   "fieldtype": "Check",
+   "label": "Autoname"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2023-08-29 20:15:35.440223",
+ "modified_by": "Administrator",
+ "module": "Qp Dynamic Taxes And Charges",
+ "name": "Autoname File Config",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Sales User",
+   "share": 1
+  },
+  {
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Purchase User",
+   "share": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

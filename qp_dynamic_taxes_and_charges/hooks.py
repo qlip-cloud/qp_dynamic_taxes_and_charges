@@ -15,7 +15,9 @@ app_license = "MIT"
 # include js, css files in header of desk.html
 # app_include_css = "/assets/qp_dynamic_taxes_and_charges/css/qp_dynamic_taxes_and_charges.css"
 app_include_js = ["/assets/qp_dynamic_taxes_and_charges/js/controllers/add_taxes_from_item_tax_template_fun.js",
-"/assets/qp_dynamic_taxes_and_charges/js/controllers/taxes_and_charges_fun.js"]
+"/assets/qp_dynamic_taxes_and_charges/js/controllers/taxes_and_charges_fun.js",
+"/assets/qp_dynamic_taxes_and_charges/js/controllers/get_tax_rate_fun.js",
+"/assets/qp_dynamic_taxes_and_charges/js/controllers/load_item_tax_rate_fun.js"]
 
 # include js, css files in header of web template
 # web_include_css = "/assets/qp_dynamic_taxes_and_charges/css/qp_dynamic_taxes_and_charges.css"
@@ -82,9 +84,17 @@ app_include_js = ["/assets/qp_dynamic_taxes_and_charges/js/controllers/add_taxes
 # ---------------
 # Override standard doctype classes
 
-# override_doctype_class = {
-# 	"ToDo": "custom_app.overrides.CustomToDo"
-# }
+override_doctype_class = {
+	"Sales Invoice": "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.overrides.overrided_doctypes.CustomSalesInvoice",
+	"Sales Order": "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.overrides.overrided_doctypes.CustomSalesOrder",
+	"Purchase Order": "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.overrides.overrided_doctypes.CustomPurchaseOrder",
+	"Purchase Invoice": "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.overrides.overrided_doctypes.CustomPurchaseInvoice",
+	"Delivery Note": "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.overrides.overrided_doctypes.CustomDeliveryNote",
+	"Quotation": "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.overrides.overrided_doctypes.CustomQuotation",
+	"Payment Entry": "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.overrides.overrided_doctypes.CustomPaymentEntry",
+	"Purchase Receipt": "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.overrides.overrided_doctypes.CustomPurchaseReceipt",
+    "Workspace": "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.overrides.overrided_doctypes.CustomWorkspace",
+}
 
 # Document Events
 # ---------------
