@@ -17,7 +17,9 @@ app_license = "MIT"
 app_include_js = ["/assets/qp_dynamic_taxes_and_charges/js/controllers/add_taxes_from_item_tax_template_fun.js",
 "/assets/qp_dynamic_taxes_and_charges/js/controllers/taxes_and_charges_fun.js",
 "/assets/qp_dynamic_taxes_and_charges/js/controllers/get_tax_rate_fun.js",
-"/assets/qp_dynamic_taxes_and_charges/js/controllers/load_item_tax_rate_fun.js"]
+"/assets/qp_dynamic_taxes_and_charges/js/controllers/load_item_tax_rate_fun.js",
+"/assets/qp_dynamic_taxes_and_charges/js/controllers/taxes_and_totals_fun.js",
+"/assets/qp_dynamic_taxes_and_charges/js/controllers/transaction_fun.js"]
 
 # include js, css files in header of web template
 # web_include_css = "/assets/qp_dynamic_taxes_and_charges/css/qp_dynamic_taxes_and_charges.css"
