@@ -69,7 +69,7 @@ erpnext.TransactionController = erpnext.TransactionController.extend({
 				// Get global array
 				let item = locals[cdt][cdn];
 				if (item.rate != 0 && item.rate !== undefined) {
-					let calculate_tax = flt((item.base * 100.0) / item.rate);
+					let calculate_tax = flt((item.base * item.rate) / 100.0);
 					item.tax_amount = calculate_tax;
 					refresh_field("taxes");
 					cur_frm.cscript.calculate_taxes_and_totals();

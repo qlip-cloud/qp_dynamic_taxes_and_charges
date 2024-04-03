@@ -15,13 +15,11 @@ erpnext.taxes_and_totals.prototype.calculate_taxes = function() {
     $.each(this.frm.doc["items"] || [], function(n, item) {
         var item_tax_map = me._load_item_tax_rate(item.item_tax_rate);
         $.each(me.frm.doc["taxes"] || [], function(i, tax) {
-            console.log("taxes_and_totals tax.rate: " + tax.rate);
-            if (tax.charge_type == "Actual") {
+              if (tax.charge_type == "Actual") {
                 if (tax.rate != 0 && tax.rate !== undefined){
-                        console.log("Into taxes");
-                        tax.base = flt((tax.tax_amount * tax.rate) / 100.0);
+                        tax.base = flt((tax.tax_amount * 100.0) / tax.rate);
                 } else {
-                    tax.base = 0;
+                    tax.base = 0.0;
                 }
             }
 
