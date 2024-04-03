@@ -43,23 +43,69 @@ erpnext.TransactionController = erpnext.TransactionController.extend({
 			cur_frm.cscript.calculate_taxes_and_totals();
 		});
 
-		frappe.ui.form.on(this.frm.cscript.tax_table, "base", function(frm, cdt, cdn) {
-			// Get global array
-			let item = locals[cdt][cdn];
-			console.log("transaction_fun item.rate" + item.rate);
-			if (item.rate != 0 && item.rate !== undefined) {
-				console.log("Into");
-				let calculate_tax = flt((item.base * 100.0) / item.rate);
-				item.tax_amount = calculate_tax;
-				refresh_field("taxes");
-				cur_frm.cscript.calculate_taxes_and_totals();
-			} else {
-				//var msg = __("Tax rate is 0")
-				item.base = 0;
-				refresh_field("taxes");
-				//frappe.throw(msg);
+		//Only doctypes "Sales Invoice", "Purchase Invoice"
+		if(["Sales Invoice", "Purchase Invoice"].includes(this.frm.doctype)){
+
+			//Get Rate
+			var updateAccountTax = function(frm, cdt, cdn){
+				var d = locals[cdt][cdn];
+				if(!d.charge_type && d.account_head){
+					frappe.msgprint(__("Please select Charge Type first"));
+					frappe.model.set_value(cdt, cdn, "account_head", "");
+				} else if (d.account_head) {
+					frappe.call({
+						type:"GET",
+						method: "erpnext.controllers.accounts_controller.get_tax_rate",
+						args: {"account_head":d.account_head},
+						callback: function(r) {
+							frappe.model.set_value(cdt, cdn, "rate", r.message.tax_rate || 0);
+							frappe.model.set_value(cdt, cdn, "description", r.message.account_name);
+						}
+					})
+				}
 			}
-		});
+			
+			frappe.ui.form.on(this.frm.cscript.tax_table, "base", function(frm, cdt, cdn) {
+				// Get global array
+				let item = locals[cdt][cdn];
+				if (item.rate != 0 && item.rate !== undefined) {
+					let calculate_tax = flt((item.base * 100.0) / item.rate);
+					item.tax_amount = calculate_tax;
+					refresh_field("taxes");
+					cur_frm.cscript.calculate_taxes_and_totals();
+				} else {
+					item.base = 0.0;
+					refresh_field("taxes");
+				}
+			});
+	
+			frappe.ui.form.on(this.frm.cscript.tax_table, "account_head", function(frm, cdt, cdn) {
+				let item = locals[cdt][cdn];
+				if([undefined, ""].includes(item.account_head)){
+					frappe.model.set_value(cdt, cdn, "rate", 0.0);
+					frappe.model.set_value(cdt, cdn, "base", 0.0);
+				} else {
+					updateAccountTax(frm, cdt, cdn);
+				}
+			});
+	
+			frappe.ui.form.on(this.frm.cscript.tax_table, "charge_type", function(frm, cdt, cdn) {
+				let item = locals[cdt][cdn];
+				if([undefined, ""].includes(item.account_head)){
+					frappe.msgprint(__("Please select Charge Type first"));
+					frappe.model.set_value(cdt, cdn, "account_head", "");
+					frappe.model.set_value(cdt, cdn, "rate", 0.0);
+					frappe.model.set_value(cdt, cdn, "base", 0.0);
+				} else {
+					updateAccountTax(frm, cdt, cdn);
+				}
+			});
+
+		} else {
+			frappe.ui.form.on(this.frm.cscript.tax_table, "base", function(frm, cdt, cdn) {
+				cur_frm.cscript.calculate_taxes_and_totals();
+			});
+		}
 
 		frappe.ui.form.on(this.frm.cscript.tax_table, "tax_amount", function(frm, cdt, cdn) {
 			cur_frm.cscript.calculate_taxes_and_totals();
