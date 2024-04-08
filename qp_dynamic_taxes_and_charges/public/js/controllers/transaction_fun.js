@@ -82,8 +82,16 @@ erpnext.TransactionController = erpnext.TransactionController.extend({
 			frappe.ui.form.on(this.frm.cscript.tax_table, "account_head", function(frm, cdt, cdn) {
 				let item = locals[cdt][cdn];
 				if([undefined, ""].includes(item.account_head)){
+					//Set rate in front end for reload calculation
 					frappe.model.set_value(cdt, cdn, "rate", 0.0);
-					frappe.model.set_value(cdt, cdn, "base", 0.0);
+					
+					//Set variables to init value
+					item.base = 0.0;
+					item.tax_amount = 0.0;
+					item.description = "";
+					
+					//Refresh form
+					refresh_field("taxes");
 				} else {
 					updateAccountTax(frm, cdt, cdn);
 				}
