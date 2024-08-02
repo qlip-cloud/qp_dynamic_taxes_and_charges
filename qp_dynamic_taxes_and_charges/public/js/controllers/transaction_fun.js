@@ -1,4 +1,4 @@
-erpnext.TransactionController = erpnext.taxes_and_totals.extend({
+erpnext.TransactionController = erpnext.TransactionController.extend({
     setup: function() {
 		this._super();
 		let me = this;
