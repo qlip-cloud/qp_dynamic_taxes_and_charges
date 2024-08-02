@@ -1,4 +1,7 @@
-erpnext.TransactionController = erpnext.TransactionController.extend({
+
+frappe.provide('erpnext.accounts.dimensions');
+
+erpnext.TransactionController = erpnext.taxes_and_totals.extend({
     setup: function() {
 		this._super();
 		let me = this;
