@@ -98,6 +98,8 @@ override_doctype_class = {
     "Workspace": "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.overrides.overrided_doctypes.CustomWorkspace",
 }
 
+extend_bootinfo = "qp_dynamic_taxes_and_charges.startup.boot.qp_boot_session"
+
 # Document Events
 # ---------------
 # Hook on document methods and events
