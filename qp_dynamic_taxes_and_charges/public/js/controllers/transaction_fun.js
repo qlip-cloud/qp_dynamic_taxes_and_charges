@@ -402,7 +402,241 @@ erpnext.TransactionController = erpnext.taxes_and_totals.extend({
 			this.frm.get_field("items").grid.set_multiple_add("item_code", "qty");
 		}
 	},
+	_load_item_tax_rate: function(item_tax_rate) {
 
+		// console.time('_load_item_tax_rate_fun');
+
+		let return_item_tax_rate;
+		let me = this;
+		let cruzar_impuestos = cint(frappe.boot.cruzar_impuestos);
+
+		if(cruzar_impuestos && !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(me.frm.doc.doctype)){
+			if(item_tax_rate){
+				return_item_tax_rate = JSON.parse(item_tax_rate);
+				$.each(return_item_tax_rate, function(tax, rate) {
+					if(!me.frm.doc.taxes.some(t => (t.account_head === tax && t.rate === rate))){
+						delete return_item_tax_rate[tax];
+					}   
+				});
+			}else{
+				return_item_tax_rate = {}
+			}
+		}else{
+			return_item_tax_rate = item_tax_rate ? JSON.parse(item_tax_rate) : {};
+		}
+
+		// console.timeEnd('_load_item_tax_rate_fun');
+		return return_item_tax_rate
+	},
+	add_taxes_from_item_tax_template: function(item_tax_map)  {
+
+		// console.time('add_taxes_from_item_tax_template_fun');
+
+		let me = this;
+		let item_tax_list = [];
+		let is_check_merge = cint(frappe.boot.cruzar_impuestos);
+		let master_doctype = frappe.meta.get_docfield(me.frm.doc.doctype, "taxes_and_charges", me.frm.doc.name).options;
+		let master_name = me.frm.doc.taxes_and_charges;
+
+		if (item_tax_map && cint(frappe.defaults.get_default("add_taxes_from_item_tax_template"))) {
+
+			if (typeof (item_tax_map) == "string") {
+				item_tax_map = JSON.parse(item_tax_map);
+			}
+
+			$.each(item_tax_map, function(tax, rate) {
+
+				let found = (me.frm.doc.taxes || []).find(d => {
+
+					if(is_check_merge && !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(me.frm.doc.doctype)){
+						if(d.account_head === tax && d.rate === rate)
+							return d
+					}else{
+						if(d.account_head === tax)
+							return d
+					}
+
+				});
+
+				if(is_check_merge && !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(me.frm.doc.doctype)){
+					frappe.call({
+						method: "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.services.taxes.check_tabletax_exist",
+						args: {
+							"doctype":master_doctype,
+							"parent": master_name,
+							"tax_type":tax,
+							"tax_rate":rate
+						},
+						async: false,
+						callback: function(r) {
+
+							item_tax_list = r.message["item_tax_list"]
+
+							if(!r.message["exist"] && !found)
+								found = true
+						}
+					});
+				}
+
+
+				if (!found) {
+
+					let flag_add = true;
+
+					if(is_check_merge && !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(me.frm.doc.doctype)){
+						if (['On Previous Row Amount', 'Previous Row Total'].includes(item_tax_list.find(x => x.account_head == tax).charge_type)){
+
+							let prev_account_head = item_tax_list.find(x => x.idx == item_tax_list.find(x => x.account_head == tax).row_id).account_head
+							let ex = false;
+
+							$.each(item_tax_map, function(tax, rate) {
+								if(prev_account_head == tax) ex = true;
+							});
+
+							if(!ex){
+								if(!cur_frm.doc.taxes.some(t => t.account_head == prev_account_head))
+									flag_add = false;
+							}
+
+						}
+					}
+
+
+					if(flag_add){
+						let child = frappe.model.add_child(me.frm.doc, "taxes");
+						child.charge_type =  is_check_merge && !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(me.frm.doc.doctype) ? item_tax_list.find(x => x.account_head == tax).charge_type : "On Net Total";
+						child.account_head = tax;
+						child.rate = is_check_merge && !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(me.frm.doc.doctype) ? rate : 0;
+
+						if(is_check_merge && !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(me.frm.doc.doctype)){
+							if (['On Previous Row Amount', 'Previous Row Total'].includes(child.charge_type)){
+								is_check_merge && !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(me.frm.doc.doctype) ? child.row_id = me.frm.doc.taxes.slice(-1).idx : child.row_id = item_tax_list.find(x => x.account_head == tax).row_id;
+							}
+						}
+					}
+				}
+			});
+
+
+		}
+
+		// console.timeEnd('add_taxes_from_item_tax_template_fun');
+	},
+	_get_tax_rate: function(tax, item_tax_map) {
+
+		// console.time('_get_tax_rate_fun');
+
+		let tax_rate;
+		let impuesto_individual = cint(frappe.boot.impuesto_individual);
+
+		if(impuesto_individual && !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(cur_frm.doc.doctype)){
+			tax_rate =  (Object.keys(item_tax_map).indexOf(tax.account_head) != -1) ? flt(item_tax_map[tax.account_head], precision("rate", tax)) : 0;
+
+			if(['On Previous Row Amount', 'Previous Row Total'].includes(tax.charge_type) && Object.keys(item_tax_map).indexOf(cur_frm.doc.taxes[cint(tax.row_id)-1].account_head) == -1 ){
+				if('Previous Row Total' == tax.charge_type)
+					cur_frm.doc.taxes[cint(tax.row_id)-1].grand_total_for_current_item = cur_frm.doc.taxes[cint(tax.row_id)-1].tax_amount
+
+				if('On Previous Row Amount' == tax.charge_type)
+					cur_frm.doc.taxes[cint(tax.row_id)-1].tax_amount_for_current_item = cur_frm.doc.taxes[cint(tax.row_id)-1].tax_amount
+			}
+
+		}else{
+			tax_rate =  (Object.keys(item_tax_map).indexOf(tax.account_head) != -1) ? flt(item_tax_map[tax.account_head], precision("rate", tax)) : tax.rate;
+		}
+
+		// console.timeEnd('_get_tax_rate_fun');
+		return tax_rate
+	},
+	calculate_taxes: function() {
+		
+		var me = this;
+		this.frm.doc.rounding_adjustment = 0;
+		var actual_tax_dict = {};
+
+		// maintain actual tax rate based on idx
+		$.each(this.frm.doc["taxes"] || [], function(i, tax) {
+			if (tax.charge_type == "Actual") {
+				actual_tax_dict[tax.idx] = flt(tax.tax_amount, precision("tax_amount", tax));
+			}
+		});
+
+		$.each(this.frm.doc["items"] || [], function(n, item) {
+			var item_tax_map = me._load_item_tax_rate(item.item_tax_rate);
+			$.each(me.frm.doc["taxes"] || [], function(i, tax) {
+
+				if (tax.charge_type == "Actual") {
+					if (tax.rate != 0 && tax.rate !== undefined){
+							tax.base = flt((tax.tax_amount * 100.0) / tax.rate);
+					} else {
+						tax.base = 0.0;
+					}
+				}
+				
+				// tax_amount represents the amount of tax for the current step
+				var current_tax_amount = me.get_current_tax_amount(item, tax, item_tax_map);
+
+				// Adjust divisional loss to the last item
+				if (tax.charge_type == "Actual") {
+					actual_tax_dict[tax.idx] -= current_tax_amount;
+					if (n == me.frm.doc["items"].length - 1) {
+						current_tax_amount += actual_tax_dict[tax.idx];
+					}
+				}
+
+				// accumulate tax amount into tax.tax_amount
+				if (tax.charge_type != "Actual" &&
+					!(me.discount_amount_applied && me.frm.doc.apply_discount_on=="Grand Total")) {
+					tax.tax_amount += current_tax_amount;
+				}
+
+				// store tax_amount for current item as it will be used for
+				// charge type = 'On Previous Row Amount'
+				tax.tax_amount_for_current_item = current_tax_amount;
+
+				// tax amount after discount amount
+				tax.tax_amount_after_discount_amount += current_tax_amount;
+
+				// for buying
+				if(tax.category) {
+					// if just for valuation, do not add the tax amount in total
+					// hence, setting it as 0 for further steps
+					current_tax_amount = (tax.category == "Valuation") ? 0.0 : current_tax_amount;
+
+					current_tax_amount *= (tax.add_deduct_tax == "Deduct") ? -1.0 : 1.0;
+				}
+
+				// note: grand_total_for_current_item contains the contribution of
+				// item's amount, previously applied tax and the current tax on that item
+				if(i==0) {
+					tax.grand_total_for_current_item = flt(item.net_amount + current_tax_amount);
+				} else {
+					tax.grand_total_for_current_item =
+						flt(me.frm.doc["taxes"][i-1].grand_total_for_current_item + current_tax_amount);
+				}
+
+				// set precision in the last item iteration
+				if (n == me.frm.doc["items"].length - 1) {
+					me.round_off_totals(tax);
+					me.set_in_company_currency(tax,
+						["tax_amount", "tax_amount_after_discount_amount"]);
+
+					me.round_off_base_values(tax);
+
+					// in tax.total, accumulate grand total for each item
+					me.set_cumulative_total(i, tax);
+
+					me.set_in_company_currency(tax, ["total"]);
+
+					// adjust Discount Amount loss in last tax iteration
+					if ((i == me.frm.doc["taxes"].length - 1) && me.discount_amount_applied
+						&& me.frm.doc.apply_discount_on == "Grand Total" && me.frm.doc.discount_amount) {
+						me.frm.doc.rounding_adjustment = flt(me.frm.doc.grand_total -
+							flt(me.frm.doc.discount_amount) - tax.total, precision("rounding_adjustment"));
+					}
+				}
+			});
+		});
+	},
 	refresh: function() {
 		erpnext.toggle_naming_series();
 		erpnext.hide_company();
