@@ -2087,7 +2087,7 @@ erpnext.TransactionController = erpnext.taxes_and_totals.extend({
 														add_tax = false;
 													}
 
-													tax.row_id = me.frm.doc.taxes.slice(-1).idx;
+													tax.row_id = me.frm.doc.taxes.slice(-1)[0].idx;
 												}
 
 												if(add_tax){
@@ -2124,7 +2124,7 @@ erpnext.TransactionController = erpnext.taxes_and_totals.extend({
 														add_tax = false;
 													}
 
-													tax.row_id = me.frm.doc.taxes.slice(-1).idx;
+													tax.row_id = me.frm.doc.taxes.slice(-1)[0].idx;
 												}
 
 												if(add_tax){
