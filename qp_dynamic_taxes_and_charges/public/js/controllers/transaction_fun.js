@@ -510,14 +510,14 @@ erpnext.TransactionController = erpnext.taxes_and_totals.extend({
 
 						if(is_check_merge && !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(me.frm.doc.doctype)){
 							if (['On Previous Row Amount', 'Previous Row Total'].includes(child.charge_type)){
-								is_check_merge && !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(me.frm.doc.doctype) ? child.row_id = me.frm.doc.taxes.slice(-1)[0].idx : child.row_id = item_tax_list.find(x => x.account_head == tax).row_id;
+								let prev_account_head = item_tax_list.find(x => x.idx == item_tax_list.find(x => x.account_head == tax).row_id).account_head
+								is_check_merge && !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(me.frm.doc.doctype) ? child.row_id = me.frm.doc.taxes.find(x => x.account_head == prev_account_head).idx : child.row_id = item_tax_list.find(x => x.account_head == tax).row_id;
 							}
 						}
 					}
 				}
 			});
-
-
+			
 		}
 
 		// console.timeEnd('add_taxes_from_item_tax_template_fun');
@@ -2087,7 +2087,7 @@ erpnext.TransactionController = erpnext.taxes_and_totals.extend({
 														add_tax = false;
 													}
 
-													tax.row_id = me.frm.doc.taxes.slice(-1)[0].idx;
+													tax.row_id = me.frm.doc.taxes.find(x => x.account_head == prev_account_head).idx;
 												}
 
 												if(add_tax){
