@@ -414,9 +414,11 @@ erpnext.TransactionController = erpnext.taxes_and_totals.extend({
 			if(item_tax_rate){
 				return_item_tax_rate = JSON.parse(item_tax_rate);
 				$.each(return_item_tax_rate, function(tax, rate) {
-					if(!me.frm.doc.taxes.some(t => (t.account_head === tax && t.rate === rate))){
-						delete return_item_tax_rate[tax];
-					}   
+					if(me.frm.doc.taxes){
+						if(!me.frm.doc.taxes.some(t => (t.account_head === tax && t.rate === rate))){
+							delete return_item_tax_rate[tax];
+						}   
+					}
 				});
 			}else{
 				return_item_tax_rate = {}
@@ -517,6 +519,7 @@ erpnext.TransactionController = erpnext.taxes_and_totals.extend({
 					}
 				}
 			});
+
 			
 		}
 
