@@ -30,8 +30,8 @@ def check_tabletax_exist(doctype, tax_type, tax_rate, parent = None):
         
     item_tax_list = frappe.db.get_values(tax_template_table, {"parent": parent}, ['account_head', 'charge_type', 'row_id', 'idx'], as_dict=1)
     
-    #if item_tax_list:
-    #    item_tax_list = sorted(item_tax_list, key= lambda i:i['idx'])
+    if item_tax_list:
+        item_tax_list = sorted(item_tax_list, key= lambda i:i['idx'])
 
     return {
         "exist": True if exist else False,
