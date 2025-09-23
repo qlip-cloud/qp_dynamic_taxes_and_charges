@@ -510,7 +510,7 @@ erpnext.TransactionController = erpnext.taxes_and_totals.extend({
 
 						if(is_check_merge && !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(me.frm.doc.doctype)){
 							if (['On Previous Row Amount', 'Previous Row Total'].includes(child.charge_type)){
-								is_check_merge && !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(me.frm.doc.doctype) ? child.row_id = me.frm.doc.taxes.slice(-1).idx : child.row_id = item_tax_list.find(x => x.account_head == tax).row_id;
+								is_check_merge && !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(me.frm.doc.doctype) ? child.row_id = me.frm.doc.taxes.slice(-1)[0].idx : child.row_id = item_tax_list.find(x => x.account_head == tax).row_id;
 							}
 						}
 					}
