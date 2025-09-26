@@ -533,8 +533,9 @@ erpnext.TransactionController = erpnext.taxes_and_totals.extend({
 
 		let tax_rate;
 		let impuesto_individual = cint(frappe.boot.impuesto_individual);
-
-		if(impuesto_individual && !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(cur_frm.doc.doctype)){
+		let cruce_de_impuestos_en_compras = cint(frappe.boot.cruce_de_impuestos_en_compras);
+		
+		if(impuesto_individual &&  (cruce_de_impuestos_en_compras ? true : !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(cur_frm.doc.doctype))){
 			tax_rate =  (Object.keys(item_tax_map).indexOf(tax.account_head) != -1) ? flt(item_tax_map[tax.account_head], precision("rate", tax)) : 0;
 
 			if(['On Previous Row Amount', 'Previous Row Total'].includes(tax.charge_type) && Object.keys(item_tax_map).indexOf(cur_frm.doc.taxes[cint(tax.row_id)-1].account_head) == -1 ){
