@@ -6,9 +6,9 @@ from erpnext.controllers.taxes_and_totals import calculate_taxes_and_totals
 class custom_calculate_taxes_and_totals(calculate_taxes_and_totals):
 
     def _get_tax_rate(self, tax, item_tax_map):
-
+            
         impuesto_individual = frappe.db.get_single_value('Dynamic Taxes Config', "impuesto_individual")
-        
+
         if tax.account_head in item_tax_map:
             if impuesto_individual:
                 if tax.charge_type in ['On Previous Row Amount', 'Previous Row Total'] and not item_tax_map.get(self.doc.get("taxes")[cint(tax.row_id) - 1].account_head):
