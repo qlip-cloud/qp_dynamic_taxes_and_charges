@@ -65,6 +65,7 @@ class CustomPurchaseReceipt(PurchaseReceipt):
 class CustomWorkspace(Workspace):
 
 	def get_link_groups(self):
+
 		cards = []
 		current_card = {
 			"label": "Link",

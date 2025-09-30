@@ -14,12 +14,13 @@ app_license = "MIT"
 
 # include js, css files in header of desk.html
 # app_include_css = "/assets/qp_dynamic_taxes_and_charges/css/qp_dynamic_taxes_and_charges.css"
-app_include_js = ["/assets/qp_dynamic_taxes_and_charges/js/controllers/add_taxes_from_item_tax_template_fun.js",
-"/assets/qp_dynamic_taxes_and_charges/js/controllers/taxes_and_charges_fun.js",
-"/assets/qp_dynamic_taxes_and_charges/js/controllers/get_tax_rate_fun.js",
-"/assets/qp_dynamic_taxes_and_charges/js/controllers/load_item_tax_rate_fun.js",
-"/assets/qp_dynamic_taxes_and_charges/js/controllers/taxes_and_totals_fun.js",
-"/assets/qp_dynamic_taxes_and_charges/js/controllers/transaction_fun.js"]
+app_include_js = ["/assets/qp_dynamic_taxes_and_charges/js/controllers/transaction_fun.js",
+#"/assets/qp_dynamic_taxes_and_charges/js/controllers/add_taxes_from_item_tax_template_fun.js",
+#"/assets/qp_dynamic_taxes_and_charges/js/controllers/taxes_and_charges_fun.js",
+#"/assets/qp_dynamic_taxes_and_charges/js/controllers/get_tax_rate_fun.js",
+#"/assets/qp_dynamic_taxes_and_charges/js/controllers/load_item_tax_rate_fun.js",
+#"/assets/qp_dynamic_taxes_and_charges/js/controllers/taxes_and_totals_fun.js"
+]
 
 # include js, css files in header of web template
 # web_include_css = "/assets/qp_dynamic_taxes_and_charges/css/qp_dynamic_taxes_and_charges.css"
@@ -29,14 +30,16 @@ app_include_js = ["/assets/qp_dynamic_taxes_and_charges/js/controllers/add_taxes
 # website_theme_scss = "qp_dynamic_taxes_and_charges/public/scss/website"
 
 # include js, css files in header of web form
-# webform_include_js = {"doctype": "public/js/doctype.js"}
+webform_include_js = {"doctype": "public/js/doctype.js"}
 # webform_include_css = {"doctype": "public/css/doctype.css"}
 
 # include js in page
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-# doctype_js = {"doctype" : "public/js/doctype.js"}
+doctype_js = {
+    "Sales Invoice": "/public/js/forms/sales_invoices.js"
+}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
@@ -89,12 +92,12 @@ app_include_js = ["/assets/qp_dynamic_taxes_and_charges/js/controllers/add_taxes
 override_doctype_class = {
 	"Sales Invoice": "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.overrides.overrided_doctypes.CustomSalesInvoice",
 	"Sales Order": "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.overrides.overrided_doctypes.CustomSalesOrder",
-	#"Purchase Order": "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.overrides.overrided_doctypes.CustomPurchaseOrder",
-	#"Purchase Invoice": "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.overrides.overrided_doctypes.CustomPurchaseInvoice",
+	"Purchase Order": "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.overrides.overrided_doctypes.CustomPurchaseOrder",
+	"Purchase Invoice": "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.overrides.overrided_doctypes.CustomPurchaseInvoice",
 	"Delivery Note": "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.overrides.overrided_doctypes.CustomDeliveryNote",
 	"Quotation": "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.overrides.overrided_doctypes.CustomQuotation",
 	"Payment Entry": "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.overrides.overrided_doctypes.CustomPaymentEntry",
-	#"Purchase Receipt": "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.overrides.overrided_doctypes.CustomPurchaseReceipt",
+	"Purchase Receipt": "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.overrides.overrided_doctypes.CustomPurchaseReceipt",
     "Workspace": "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.overrides.overrided_doctypes.CustomWorkspace",
 }
 
