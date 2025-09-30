@@ -511,6 +511,12 @@ erpnext.TransactionController = erpnext.taxes_and_totals.extend({
 						child.charge_type =  is_check_merge  && (cruce_de_impuestos_en_compras ? true : !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(me.frm.doc.doctype)) ? item_tax_list.find(x => x.account_head == tax).charge_type : "On Net Total";
 						child.account_head = tax;
 						child.rate = is_check_merge  && (cruce_de_impuestos_en_compras ? true : !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(me.frm.doc.doctype)) ? rate : 0;
+						
+						if(['Sales Invoice'].includes(me.frm.doc.doctype)){
+							if(me.frm.doc.cost_center != null){
+								child.cost_center = me.frm.doc.cost_center;
+							}
+						}
 
 						if(is_check_merge  && (cruce_de_impuestos_en_compras ? true : !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(me.frm.doc.doctype))){
 							if (['On Previous Row Amount', 'Previous Row Total'].includes(child.charge_type)){
@@ -2098,6 +2104,12 @@ erpnext.TransactionController = erpnext.taxes_and_totals.extend({
 												}
 
 												if(add_tax){
+													if(['Sales Invoice'].includes(me.frm.doc.doctype)){
+														if(me.frm.doc.cost_center != null){
+															tax.cost_center = me.frm.doc.cost_center;
+														}
+													}
+													
 													me.frm.add_child("taxes", tax);
 												}
 											}
@@ -2135,6 +2147,13 @@ erpnext.TransactionController = erpnext.taxes_and_totals.extend({
 												}
 
 												if(add_tax){
+
+													if(['Sales Invoice'].includes(me.frm.doc.doctype)){
+														if(me.frm.doc.cost_center != null){
+															tax.cost_center = me.frm.doc.cost_center;
+														}
+													}
+
 													me.frm.add_child("taxes", tax);
 												}
 
