@@ -21,7 +21,7 @@ frappe.ui.form.on("Sales Invoice", {
                     callback: function(r) {
                         if(!r.exc) {
 
-                            value = r.message;
+                            let value = r.message;
 
                             if(value.report_type == 'Profit and Loss'){
                                 tax.cost_center = frm.doc.cost_center;

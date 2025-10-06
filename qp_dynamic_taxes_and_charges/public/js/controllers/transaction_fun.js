@@ -530,7 +530,7 @@ erpnext.TransactionController = erpnext.taxes_and_totals.extend({
 									callback: function(r) {
 										if(!r.exc) {
 
-											value = r.message;
+											let value = r.message;
 
 											if(value.report_type == 'Profit and Loss'){
 												tax.cost_center = me.frm.doc.cost_center;
@@ -2144,7 +2144,7 @@ erpnext.TransactionController = erpnext.taxes_and_totals.extend({
 																callback: function(r) {
 																	if(!r.exc) {
 
-																		value = r.message;
+																		let value = r.message;
 
 																		if(value.report_type == 'Profit and Loss'){
 																			tax.cost_center = me.frm.doc.cost_center;
@@ -2210,7 +2210,7 @@ erpnext.TransactionController = erpnext.taxes_and_totals.extend({
 																callback: function(r) {
 																	if(!r.exc) {
 
-																		value = r.message;
+																		let value = r.message;
 
 																		if(value.report_type == 'Profit and Loss'){
 																			tax.cost_center = me.frm.doc.cost_center;
