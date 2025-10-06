@@ -514,7 +514,30 @@ erpnext.TransactionController = erpnext.taxes_and_totals.extend({
 						
 						if(['Sales Invoice'].includes(me.frm.doc.doctype)){
 							if(me.frm.doc.cost_center != null){
-								child.cost_center = me.frm.doc.cost_center;
+								frappe.call({
+									method:"frappe.client.get_value",
+									type: 'GET',
+									args: {
+										doctype: 'Account',
+										fieldname: 'report_type',
+										filters: tax.account_head,
+										parent: null
+									},
+									async:false,
+									freeze: true,
+									async:false,
+									freeze_message: '... Gestionando centro de costo para los impuestos',
+									callback: function(r) {
+										if(!r.exc) {
+
+											value = r.message;
+
+											if(value.report_type == 'Profit and Loss'){
+												tax.cost_center = me.frm.doc.cost_center;
+											}
+										}
+									}
+								});
 							}
 						}
 
@@ -2106,7 +2129,29 @@ erpnext.TransactionController = erpnext.taxes_and_totals.extend({
 												if(add_tax){
 													if(['Sales Invoice'].includes(me.frm.doc.doctype)){
 														if(me.frm.doc.cost_center != null){
-															tax.cost_center = me.frm.doc.cost_center;
+															frappe.call({
+																method:"frappe.client.get_value",
+																type: 'GET',
+																args: {
+																	doctype: 'Account',
+																	fieldname: 'report_type',
+																	filters: tax.account_head,
+																	parent: null
+																},
+																async:false,
+																freeze: true,
+																freeze_message: '... Gestionando centro de costo para los impuestos',
+																callback: function(r) {
+																	if(!r.exc) {
+
+																		value = r.message;
+
+																		if(value.report_type == 'Profit and Loss'){
+																			tax.cost_center = me.frm.doc.cost_center;
+																		}
+																	}
+																}
+															});
 														}
 													}
 													
@@ -2150,7 +2195,30 @@ erpnext.TransactionController = erpnext.taxes_and_totals.extend({
 
 													if(['Sales Invoice'].includes(me.frm.doc.doctype)){
 														if(me.frm.doc.cost_center != null){
-															tax.cost_center = me.frm.doc.cost_center;
+															frappe.call({
+																method:"frappe.client.get_value",
+																type: 'GET',
+																args: {
+																	doctype: 'Account',
+																	fieldname: 'report_type',
+																	filters: tax.account_head,
+																	parent: null
+																},
+																async:false,
+																freeze: true,
+																freeze_message: '... Gestionando centro de costo para los impuestos',
+																callback: function(r) {
+																	if(!r.exc) {
+
+																		value = r.message;
+
+																		if(value.report_type == 'Profit and Loss'){
+																			tax.cost_center = me.frm.doc.cost_center;
+																		}
+																	}
+																}
+															});
+															
 														}
 													}
 
