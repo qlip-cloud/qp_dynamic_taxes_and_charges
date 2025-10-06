@@ -30,7 +30,7 @@ app_include_js = ["/assets/qp_dynamic_taxes_and_charges/js/controllers/transacti
 # website_theme_scss = "qp_dynamic_taxes_and_charges/public/scss/website"
 
 # include js, css files in header of web form
-webform_include_js = {"doctype": "public/js/doctype.js"}
+# webform_include_js = {"doctype": "public/js/doctype.js"}
 # webform_include_css = {"doctype": "public/css/doctype.css"}
 
 # include js in page
@@ -38,7 +38,7 @@ webform_include_js = {"doctype": "public/js/doctype.js"}
 
 # include js in doctype views
 doctype_js = {
-    "Sales Invoice": "/public/js/forms/sales_invoices.js"
+    "Sales Invoice": "public/js/forms/sales_invoices.js"
 }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}

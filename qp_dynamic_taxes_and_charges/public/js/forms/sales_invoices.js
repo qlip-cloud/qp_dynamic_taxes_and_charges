@@ -6,7 +6,29 @@ frappe.ui.form.on("Sales Invoice", {
             });
 
             $.each(frm.doc.taxes, function(i, tax){
-                tax.cost_center = frm.doc.cost_center;
+                frappe.call({
+                    method:"frappe.client.get_value",
+                    type: 'GET',
+                    args: {
+                        doctype: 'Account',
+                        fieldname: 'report_type',
+                        filters: tax.account_head,
+                        parent: null
+                    },
+                    async:false,
+                    freeze: true,
+                    freeze_message: '... Gestionando centro de costo para los impuestos',
+                    callback: function(r) {
+                        if(!r.exc) {
+
+                            value = r.message;
+
+                            if(value.report_type == 'Profit and Loss'){
+                                tax.cost_center = frm.doc.cost_center;
+                            }
+                        }
+                    }
+                });              
             });
 
             frm.refresh_field("items");
