@@ -32,6 +32,7 @@ frappe.ui.form.on("Sales Invoice", {
             });
 
             frm.refresh_field("items");
+            frm.refresh_field("taxes");
         }
     }
 });
