@@ -512,7 +512,7 @@ erpnext.TransactionController = erpnext.taxes_and_totals.extend({
 						child.account_head = tax;
 						child.rate = is_check_merge  && (cruce_de_impuestos_en_compras ? true : !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(me.frm.doc.doctype)) ? rate : 0;
 						
-						if(['Sales Invoice'].includes(me.frm.doc.doctype)){
+						if(['Sales Invoice', 'Purchase Invoice'].includes(me.frm.doc.doctype)){
 							if(me.frm.doc.cost_center != null){
 								frappe.call({
 									method:"frappe.client.get_value",
@@ -2127,7 +2127,7 @@ erpnext.TransactionController = erpnext.taxes_and_totals.extend({
 												}
 
 												if(add_tax){
-													if(['Sales Invoice'].includes(me.frm.doc.doctype)){
+													if(['Sales Invoice', 'Purchase Invoice'].includes(me.frm.doc.doctype)){
 														if(me.frm.doc.cost_center != null){
 															frappe.call({
 																method:"frappe.client.get_value",
@@ -2161,6 +2161,35 @@ erpnext.TransactionController = erpnext.taxes_and_totals.extend({
 										}
 
 									}else{
+
+										if(['Sales Invoice', 'Purchase Invoice'].includes(me.frm.doc.doctype)){
+											if(me.frm.doc.cost_center != null){
+												frappe.call({
+													method:"frappe.client.get_value",
+													type: 'GET',
+													args: {
+														doctype: 'Account',
+														fieldname: 'report_type',
+														filters: tax.account_head,
+														parent: null
+													},
+													async:false,
+													freeze: true,
+													freeze_message: '... Gestionando centro de costo para los impuestos',
+													callback: function(r) {
+														if(!r.exc) {
+
+															let value = r.message;
+
+															if(value.report_type == 'Profit and Loss'){
+																tax.cost_center = me.frm.doc.cost_center;
+															}
+														}
+													}
+												});
+											}
+										}
+
 										me.frm.add_child("taxes", tax);
 									}
 								}
@@ -2193,7 +2222,7 @@ erpnext.TransactionController = erpnext.taxes_and_totals.extend({
 
 												if(add_tax){
 
-													if(['Sales Invoice'].includes(me.frm.doc.doctype)){
+													if(['Sales Invoice', 'Purchase Invoice'].includes(me.frm.doc.doctype)){
 														if(me.frm.doc.cost_center != null){
 															frappe.call({
 																method:"frappe.client.get_value",
@@ -2232,6 +2261,36 @@ erpnext.TransactionController = erpnext.taxes_and_totals.extend({
 
 
 							}else{
+
+								for (let tax of r.message) { }
+								if(['Sales Invoice', 'Purchase Invoice'].includes(me.frm.doc.doctype)){
+									if(me.frm.doc.cost_center != null){
+										frappe.call({
+											method:"frappe.client.get_value",
+											type: 'GET',
+											args: {
+												doctype: 'Account',
+												fieldname: 'report_type',
+												filters: tax.account_head,
+												parent: null
+											},
+											async:false,
+											freeze: true,
+											freeze_message: '... Gestionando centro de costo para los impuestos',
+											callback: function(r) {
+												if(!r.exc) {
+
+													let value = r.message;
+
+													if(value.report_type == 'Profit and Loss'){
+														tax.cost_center = me.frm.doc.cost_center;
+													}
+												}
+											}
+										});
+									}
+								}
+
 								me.frm.set_value("taxes", r.message);
 							}
 
@@ -2250,6 +2309,13 @@ erpnext.TransactionController = erpnext.taxes_and_totals.extend({
 		frappe.run_serially([
 			() => this.update_item_tax_map(),
 			() => erpnext.utils.set_taxes(this.frm, "tax_category"),
+			() => this.initialize_taxes(),
+			() => this.determine_exclusive_rate(),
+			() => this.calculate_net_total(),
+			() => this.calculate_taxes(),
+			() => this.manipulate_grand_total_for_inclusive_tax(),
+			() => this.calculate_totals(),
+			() => this._cleanup()
 		]);
 	},
 
