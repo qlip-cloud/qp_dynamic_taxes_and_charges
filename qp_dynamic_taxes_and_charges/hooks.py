@@ -38,7 +38,8 @@ app_include_js = ["/assets/qp_dynamic_taxes_and_charges/js/controllers/transacti
 
 # include js in doctype views
 doctype_js = {
-    "Sales Invoice": "public/js/forms/sales_invoices.js"
+    "Sales Invoice": "public/js/forms/sales_invoices.js",
+    "Purchase Invoice": "public/js/forms/purchase_invoices.js"
 }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
