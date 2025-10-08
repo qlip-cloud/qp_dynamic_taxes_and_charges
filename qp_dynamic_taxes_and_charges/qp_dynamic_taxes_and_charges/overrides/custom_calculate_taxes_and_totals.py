@@ -6,7 +6,13 @@ from erpnext.controllers.taxes_and_totals import calculate_taxes_and_totals
 class custom_calculate_taxes_and_totals(calculate_taxes_and_totals):
 
     def _get_tax_rate(self, tax, item_tax_map):
-            
+        
+        validate_tax = 1
+        
+        if tax.get('is_single', None):
+             if(tax.is_single == 1):
+                validate_tax = 0
+
         impuesto_individual = frappe.db.get_single_value('Dynamic Taxes Config', "impuesto_individual")
 
         if tax.account_head in item_tax_map:
@@ -25,8 +31,11 @@ class custom_calculate_taxes_and_totals(calculate_taxes_and_totals):
                          self.doc.get("taxes")[cint(tax.row_id) - 1].grand_total_for_current_item = self.doc.get("taxes")[cint(tax.row_id) - 1].tax_amount
                     if tax.charge_type == 'On Previous Row Amount':
                          self.doc.get("taxes")[cint(tax.row_id) - 1].tax_amount_for_current_item = self.doc.get("taxes")[cint(tax.row_id) - 1].tax_amount
-
-                return 0
+                
+                if not validate_tax:
+                    return tax.rate
+                else:
+                    return 0
             else:
                 return tax.rate
 

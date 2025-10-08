@@ -43,6 +43,12 @@ erpnext.TransactionController = erpnext.taxes_and_totals.extend({
 			cur_frm.cscript.calculate_taxes_and_totals();
 		});
 
+		if(["Sales Invoice", "Purchase Invoice"].includes(this.frm.doctype)){
+			frappe.ui.form.on(this.frm.cscript.tax_table, "is_single", function(frm, cdt, cdn) {
+				cur_frm.cscript.calculate_taxes_and_totals();
+			});
+		};
+
 		//Only doctypes "Sales Invoice", "Purchase Invoice"
 		if(["Sales Invoice", "Purchase Invoice"].includes(this.frm.doctype)){
 
@@ -411,10 +417,12 @@ erpnext.TransactionController = erpnext.taxes_and_totals.extend({
 		let cruzar_impuestos = cint(frappe.boot.cruzar_impuestos);
 		let cruce_de_impuestos_en_compras = cint(frappe.boot.cruce_de_impuestos_en_compras);
 
+		
 		if(cruzar_impuestos && (cruce_de_impuestos_en_compras ? true : !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(me.frm.doc.doctype))){
 			if(item_tax_rate){
 				return_item_tax_rate = JSON.parse(item_tax_rate);
 				$.each(return_item_tax_rate, function(tax, rate) {
+
 					if(me.frm.doc.taxes){
 						if(!me.frm.doc.taxes.some(t => (t.account_head === tax && t.rate === rate))){
 							delete return_item_tax_rate[tax];
@@ -463,6 +471,7 @@ erpnext.TransactionController = erpnext.taxes_and_totals.extend({
 				});
 
 				if(is_check_merge  && (cruce_de_impuestos_en_compras ? true : !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(me.frm.doc.doctype))){
+
 					frappe.call({
 						method: "qp_dynamic_taxes_and_charges.qp_dynamic_taxes_and_charges.services.taxes.check_tabletax_exist",
 						args: {
@@ -508,9 +517,9 @@ erpnext.TransactionController = erpnext.taxes_and_totals.extend({
 
 					if(flag_add){
 						let child = frappe.model.add_child(me.frm.doc, "taxes");
-						child.charge_type =  is_check_merge  && (cruce_de_impuestos_en_compras ? true : !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(me.frm.doc.doctype)) ? item_tax_list.find(x => x.account_head == tax).charge_type : "On Net Total";
+						child.charge_type =  validate_tax && is_check_merge  && (cruce_de_impuestos_en_compras ? true : !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(me.frm.doc.doctype)) ? item_tax_list.find(x => x.account_head == tax).charge_type : "On Net Total";
 						child.account_head = tax;
-						child.rate = is_check_merge  && (cruce_de_impuestos_en_compras ? true : !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(me.frm.doc.doctype)) ? rate : 0;
+						child.rate = validate_tax && is_check_merge  && (cruce_de_impuestos_en_compras ? true : !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(me.frm.doc.doctype)) ? rate : 0;
 						
 						if(['Sales Invoice', 'Purchase Invoice'].includes(me.frm.doc.doctype)){
 							if(me.frm.doc.cost_center != null){
@@ -564,8 +573,21 @@ erpnext.TransactionController = erpnext.taxes_and_totals.extend({
 		let impuesto_individual = cint(frappe.boot.impuesto_individual);
 		let cruce_de_impuestos_en_compras = cint(frappe.boot.cruce_de_impuestos_en_compras);
 		
+		
+		let validate_tax = 1;
+
+		if('is_single' in tax){
+			if(tax.is_single == 1){
+				validate_tax = 0;
+			}
+		}
+
 		if(impuesto_individual &&  (cruce_de_impuestos_en_compras ? true : !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(cur_frm.doc.doctype))){
-			tax_rate =  (Object.keys(item_tax_map).indexOf(tax.account_head) != -1) ? flt(item_tax_map[tax.account_head], precision("rate", tax)) : 0;
+			
+			if(validate_tax) 
+				tax_rate =  (Object.keys(item_tax_map).indexOf(tax.account_head) != -1) ? flt(item_tax_map[tax.account_head], precision("rate", tax)) : 0;
+			else
+				tax_rate =  (Object.keys(item_tax_map).indexOf(tax.account_head) != -1) ? flt(item_tax_map[tax.account_head], precision("rate", tax)) : tax.rate;
 
 			if(['On Previous Row Amount', 'Previous Row Total'].includes(tax.charge_type) && Object.keys(item_tax_map).indexOf(cur_frm.doc.taxes[cint(tax.row_id)-1].account_head) == -1 ){
 				if('Previous Row Total' == tax.charge_type)
@@ -2093,7 +2115,7 @@ erpnext.TransactionController = erpnext.taxes_and_totals.extend({
 			let cruce_de_impuestos_en_compras = cint(frappe.boot.cruce_de_impuestos_en_compras);
 			let master_doctype = frappe.meta.get_docfield(me.frm.doc.doctype, "taxes_and_charges", me.frm.doc.name).options
 			let master_name = me.frm.doc.taxes_and_charges
-
+			
 			return frappe.call({
 				method: "erpnext.controllers.accounts_controller.get_taxes_and_charges",
 				args: {
