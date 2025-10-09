@@ -517,9 +517,9 @@ erpnext.TransactionController = erpnext.taxes_and_totals.extend({
 
 					if(flag_add){
 						let child = frappe.model.add_child(me.frm.doc, "taxes");
-						child.charge_type =  validate_tax && is_check_merge  && (cruce_de_impuestos_en_compras ? true : !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(me.frm.doc.doctype)) ? item_tax_list.find(x => x.account_head == tax).charge_type : "On Net Total";
+						child.charge_type =  is_check_merge  && (cruce_de_impuestos_en_compras ? true : !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(me.frm.doc.doctype)) ? item_tax_list.find(x => x.account_head == tax).charge_type : "On Net Total";
 						child.account_head = tax;
-						child.rate = validate_tax && is_check_merge  && (cruce_de_impuestos_en_compras ? true : !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(me.frm.doc.doctype)) ? rate : 0;
+						child.rate = is_check_merge  && (cruce_de_impuestos_en_compras ? true : !['Purchase Order', 'Purchase Invoice', 'Purchase Receipt'].includes(me.frm.doc.doctype)) ? rate : 0;
 						
 						if(['Sales Invoice', 'Purchase Invoice'].includes(me.frm.doc.doctype)){
 							if(me.frm.doc.cost_center != null){
