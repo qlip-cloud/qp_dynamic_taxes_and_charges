@@ -9,8 +9,7 @@
  "field_order": [
   "cruzar_impuestos",
   "cruce_de_impuestos_en_compras",
-  "impuesto_individual",
-  "impuesto_individual_en_compras"
+  "impuesto_individual"
  ],
  "fields": [
   {
@@ -31,19 +30,13 @@
    "fieldname": "cruce_de_impuestos_en_compras",
    "fieldtype": "Check",
    "label": "Cruce Impuestos en compras"
-  },
-  {
-   "default": "0",
-   "fieldname": "impuesto_individual_en_compras",
-   "fieldtype": "Check",
-   "label": "Impuesto Individual en Compras"
   }
  ],
  "icon": "icon-cog",
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-10-10 15:10:28.111917",
+ "modified": "2025-10-10 16:15:13.071333",
  "modified_by": "Administrator",
  "module": "Qp Dynamic Taxes And Charges",
  "name": "Dynamic Taxes Config",
